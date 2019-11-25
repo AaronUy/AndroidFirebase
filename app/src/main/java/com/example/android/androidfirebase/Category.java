@@ -8,6 +8,10 @@ public class Category {
     private Date date;
 
 
+    public Category(){
+
+    }
+
     public Category(String id, String cname, Date date) {
         this.id = id;
         Cname = cname;

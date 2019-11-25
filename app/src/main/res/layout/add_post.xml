@@ -18,10 +18,10 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="99dp"
             android:layout_marginTop="50dp"
-            android:onClick="createPost"
+            android:onClick="addPost"
             android:text="Save"
             app:layout_constraintStart_toEndOf="@+id/buttonBack3"
-            app:layout_constraintTop_toBottomOf="@+id/createContent" />
+            app:layout_constraintTop_toBottomOf="@+id/contentTxt" />
 
         <ScrollView
             android:id="@+id/scrollView"
@@ -33,7 +33,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="25dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/createTitle">
+            app:layout_constraintTop_toBottomOf="@+id/titleTxt">
 
             <LinearLayout
                 android:id="@+id/checkBoxContainer"
@@ -46,7 +46,7 @@
         </ScrollView>
 
         <EditText
-            android:id="@+id/createContent"
+            android:id="@+id/contentTxt"
             android:layout_width="375dp"
             android:layout_height="295dp"
             android:layout_alignParentStart="true"
@@ -61,7 +61,7 @@
             app:layout_constraintTop_toBottomOf="@+id/scrollView" />
 
         <EditText
-            android:id="@+id/createTitle"
+            android:id="@+id/titleTxt"
             android:layout_width="281dp"
             android:layout_height="56dp"
             android:layout_alignParentStart="true"
@@ -74,7 +74,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/buttonBack"
+            android:id="@+id/addCategoryBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -82,10 +82,10 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="16dp"
             android:layout_marginTop="25dp"
-            android:onClick="Back"
+            android:onClick="addCategory"
             android:text="Add Category"
             app:layout_constraintStart_toEndOf="@+id/scrollView"
-            app:layout_constraintTop_toBottomOf="@+id/createTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/titleTxt" />
 
         <Button
             android:id="@+id/buttonBack3"
@@ -99,6 +99,6 @@
             android:onClick="Back"
             android:text="Cancel"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/createContent" />
+            app:layout_constraintTop_toBottomOf="@+id/contentTxt" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

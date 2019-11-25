@@ -9,6 +9,9 @@ public class Post {
     private Date date;
     private String content;
 
+    public Post(){
+
+    }
 
     public Post(String id, String title, String category, Date date, String content){
         this.id = id;

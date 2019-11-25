@@ -25,16 +25,15 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String POST_TITLE = "POST_TITLE";
     public static final String POST_ID= "POST_ID";
     public static final String POST_CATEGORY = "POST_CATEGORY";
     public static final String POST_CONTENT = "POST_CONTENT";
     public static final String POST_TIME = "POST_TIME";
-//    public static final String FIREBASE_URL = "POST_TIME";
 
 
     ListView listViewPosts;
-    DatabaseReference dbReference;
+    DatabaseReference dbPost, dbCategory;
+
     final Format dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     List<Post> posts;
 
@@ -44,10 +43,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        dbReference = FirebaseDatabase.getInstance().getReference();
         listViewPosts = findViewById(R.id.postsLv);
 
+        dbCategory = FirebaseDatabase.getInstance().getReference("category");
+        dbPost = FirebaseDatabase.getInstance().getReference("post");
 
         posts = new ArrayList<>();
 
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 String timestamp_string = dateFormat.format(post.getDate());
                 Intent intent = new Intent(getApplicationContext(), PostActivity.class);
                 intent.putExtra(POST_ID,post.getId());
-                intent.putExtra(POST_TITLE, post.getTitle());
+                intent.putExtra("POST_TITLE", post.getTitle());
                 intent.putExtra(POST_CONTENT,post.getContent());
                 intent.putExtra(POST_CATEGORY,post.getCategory());
                 intent.putExtra(POST_TIME, timestamp_string);
@@ -80,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        dbReference.addValueEventListener(new ValueEventListener() {
+
+        dbPost.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 posts.clear();
@@ -102,11 +102,6 @@ public class MainActivity extends AppCompatActivity {
     public void addPost(View v){
         Intent intent = new Intent(this, AddPost.class);
         startActivity(intent);
-    }
-
-    public void addCategory(View v){
-        Intent intent = new Intent(this, AddCategory.class);
-        startActivityForResult(intent, 2);
     }
 
     public class TimeStampComparator implements Comparator<Post> {
