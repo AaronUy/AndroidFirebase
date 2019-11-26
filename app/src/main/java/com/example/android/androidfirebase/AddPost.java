@@ -53,6 +53,7 @@ public class AddPost extends AppCompatActivity {
         dbCategory = FirebaseDatabase.getInstance().getReference("category");
         dbPost = FirebaseDatabase.getInstance().getReference("post");
 
+
     }
 
     @Override

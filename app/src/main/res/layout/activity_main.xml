@@ -12,8 +12,8 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="410dp"
-            android:layout_height="630dp"
+            android:layout_width="414dp"
+            android:layout_height="603dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -31,6 +31,7 @@
                 android:layout_marginEnd="18dp"
                 android:layout_marginRight="18dp"
                 android:layout_marginBottom="20dp" />
+
         </LinearLayout>
 
         <TextView
@@ -56,18 +57,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/filterTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
-            android:ems="10"
-            android:hint="Enter Filter"
-            android:inputType="textPersonName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addBtn" />
-
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="150dp"
@@ -77,5 +66,16 @@
             android:layout_marginTop="24dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <Spinner
+            android:id="@+id/spinCats"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.831"
+            app:layout_constraintStart_toEndOf="@+id/spinner"
+            app:layout_constraintTop_toBottomOf="@+id/addBtn" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>

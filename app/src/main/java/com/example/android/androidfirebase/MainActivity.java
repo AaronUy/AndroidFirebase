@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -35,12 +36,12 @@ public class MainActivity extends AppCompatActivity {
 
     ListView listViewPosts;
     DatabaseReference dbPost, dbCategory;
-    EditText filterTxt;
 
     final Format dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     List<Post> posts;
+    List<Category> categories;
 
-    Spinner spinner;
+    Spinner spinner, spinCats;
     PostList postAdapter;
 
     @Override
@@ -48,14 +49,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listViewPosts = findViewById(R.id.postsLv);
-        filterTxt = findViewById(R.id.filterTxt);
 
         dbCategory = FirebaseDatabase.getInstance().getReference("category");
         dbPost = FirebaseDatabase.getInstance().getReference("post");
 
         posts = new ArrayList<>();
+        categories = new ArrayList<>();
+
 
         spinner = (Spinner) findViewById(R.id.spinner);
+        spinCats = findViewById(R.id.spinCats);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.filter_array, android.R.layout.simple_spinner_item);
@@ -104,6 +107,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        dbCategory.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                categories.clear();
+                for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
+                    Category category = categorySnapshot.getValue(Category.class);
+                    categories.add(category);
+                }
+
+                ArrayList<String> names = new ArrayList<>();
+                for(Category category: categories)
+                    names.add(category.getCname());
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(),
+                        android.R.layout.simple_spinner_dropdown_item, names);
+                adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
+
+                spinCats.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
@@ -111,34 +141,25 @@ public class MainActivity extends AppCompatActivity {
                 String selectedItem = parent.getItemAtPosition(position).toString();
                 if(selectedItem.equals("Date"))
                 {
-                    filterTxt.setHint("yyyy-MM-dd");
-                    filterTxt.setOnKeyListener(new View.OnKeyListener() {
-                        public boolean onKey(View v, int keyCode, KeyEvent event) {
-                            // If the event is a key-down event on the "enter" button
-                            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                                // Perform action on key press
-                                postAdapter.getFilter().filter(filterTxt.getText());
-                                return true;
-                            }
-                            return false;
-                        }
-                    });
+                    spinCats.setEnabled(false);
+                    listViewPosts.setAdapter(postAdapter);
                 }
                 if(selectedItem.equals("Category"))
                 {
-                    filterTxt.setHint("Enter Category");
-                    filterTxt.setOnKeyListener(new View.OnKeyListener() {
-                        public boolean onKey(View v, int keyCode, KeyEvent event) {
-                            // If the event is a key-down event on the "enter" button
-                            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                                postAdapter.getFilter().filter(filterTxt.getText());
-                                return true;
-                            }
-                            return false;
+                    spinCats.setEnabled(true);
+                    spinCats.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            String selectedItem = parent.getItemAtPosition(position).toString();
+                            postAdapter.getFilter().filter(selectedItem);
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
                         }
                     });
+
                 }
             } // to close the onItemSelected
             public void onNothingSelected(AdapterView<?> parent)
