@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -33,17 +35,20 @@ public class MainActivity extends AppCompatActivity {
 
     ListView listViewPosts;
     DatabaseReference dbPost, dbCategory;
+    EditText filterTxt;
 
     final Format dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     List<Post> posts;
 
     Spinner spinner;
+    PostList postAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listViewPosts = findViewById(R.id.postsLv);
+        filterTxt = findViewById(R.id.filterTxt);
 
         dbCategory = FirebaseDatabase.getInstance().getReference("category");
         dbPost = FirebaseDatabase.getInstance().getReference("post");
@@ -89,12 +94,55 @@ public class MainActivity extends AppCompatActivity {
                     posts.add(post);
                 }
 
-                PostList postAdapter = new PostList(MainActivity.this, posts);
+                postAdapter = new PostList(MainActivity.this, posts);
                 listViewPosts.setAdapter(postAdapter);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                if(selectedItem.equals("Date"))
+                {
+                    filterTxt.setHint("yyyy-MM-dd");
+                    filterTxt.setOnKeyListener(new View.OnKeyListener() {
+                        public boolean onKey(View v, int keyCode, KeyEvent event) {
+                            // If the event is a key-down event on the "enter" button
+                            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                                // Perform action on key press
+                                postAdapter.getFilter().filter(filterTxt.getText());
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
+                }
+                if(selectedItem.equals("Category"))
+                {
+                    filterTxt.setHint("Enter Category");
+                    filterTxt.setOnKeyListener(new View.OnKeyListener() {
+                        public boolean onKey(View v, int keyCode, KeyEvent event) {
+                            // If the event is a key-down event on the "enter" button
+                            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                                postAdapter.getFilter().filter(filterTxt.getText());
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
+                }
+            } // to close the onItemSelected
+            public void onNothingSelected(AdapterView<?> parent)
+            {
 
             }
         });
